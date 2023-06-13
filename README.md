@@ -1,1 +1,1 @@
-# Tomiko-Bot
+# Functional economic bot - Tomiko
