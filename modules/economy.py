@@ -1,5 +1,4 @@
 import asyncio
-
 import disnake
 from disnake.ext import commands
 from utils import database as db, i18n
@@ -169,6 +168,32 @@ class EconomyCog(commands.Cog):
                 )
                 await inter.edit_original_message(components=[], embed=embed)
                 break
+
+    @commands.slash_command(
+        name=disnake.Localized(key="PAY"),
+        description=disnake.Localized(key="PAY_DESCRIPTION")
+    )
+    async def pay(self, inter: disnake.ApplicationCommandInteraction, member: disnake.Member = commands.Param(
+        name=disnake.Localized(key="MEMBER"),
+        description=disnake.Localized(key="MEMBER_DESCRIPTION")
+    ), money: int = commands.Param(
+        name=disnake.Localized(key="MONEY"),
+        description=disnake.Localized(key="MONEY_DESCRIPTION")
+    )):
+        await inter.response.defer()
+        u = db.get_user(inter.author)
+        locales = i18n.Init(inter)
+        if u["money"] < money:
+            return await inter.send(embed=i18n.no_money_emb(locales, inter.author))
+        if member.bot:
+            return
+        db.users.update_one({"gid": inter.guild.id, "id": member.id}, {"$inc": {"money": money}})
+        db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"money": -money}})
+        embed = disnake.Embed(
+            title=locales.get("PAY").capitalize(),
+            description=locales.get("PAY_EMB").replace("{dollars}", str(money)).replace("{member}", member.display_name.capitalize())
+        )
+        await inter.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
