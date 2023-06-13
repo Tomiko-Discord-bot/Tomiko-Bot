@@ -1,8 +1,13 @@
 {
    "WELCOME": "Hi! My name is **Tomiko** and I'm all about economics.\nMy version is `{BOTVER}`, you can see the list of commands by typing `/help`.",
    "STOP": "Stop",
-   "NO_MONEY": "You are **missing** lights.",
+   "NO_FIRES": "You are **missing** fires.",
+   "NO_MONEY": "You **don't have enough** money.",
    "ERROR": "Error!",
+   "MEMBER": "user",
+   "MEMBER_DESCRIPTION": "Anyone on this server :)",
+   "MONEY": "dollars",
+   "MONEY_DESCRIPTION": "Number of dollars",
 
    "HELP": "help",
    "HELP_DESCRIPTION": "Shows help for all bot commands.",
@@ -65,6 +70,10 @@
    "CASINO_WIN": ">Win:",
    "CASINO_WIN_DESCR": "You **succeeded** in withdrawing all your funds from the bank, **before the share** dropped.",
    "CASINO_PIC": "> Peak Factor:",
+
+   "PAY": "transfer",
+   "PAY_DESCRIPTION": "Transfer your dollars to a person.",
+   "PAY_EMB": "You **successfully** transferred **{dollars}** <:dollar:1117546022856577084> to **{member}**.",
 
    "TIMEOUT_TITLE": "Break!",
    "TIMEOUT_DESCRIPTION": "Use this command through"
