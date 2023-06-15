@@ -69,11 +69,18 @@
    "CASINO_COF": "> Coefficient:",
    "CASINO_WIN": ">Win:",
    "CASINO_WIN_DESCR": "You **succeeded** in withdrawing all your funds from the bank, **before the share** dropped.",
-   "CASINO_PIC": "> Peak Factor:",
+   "CASINO_PIC": "> Peak Ratio:",
 
    "PAY": "transfer",
    "PAY_DESCRIPTION": "Transfer your dollars to a person.",
    "PAY_EMB": "You **successfully** transferred **{dollars}** <:dollar:1117546022856577084> to **{member}**.",
+
+   "MINES": "miner",
+   "MINES_DESCRIPTION": "Classic Minesweeper.",
+   "MINES_EMB_DESCRIPTION": "> **Game Rules:**\n- Total field - **3 mines**\n- If a mine **explodes**, you lose\n- Each unexploded mine - **1.3x **",
+   "MINES_LOST_EMB": "You failed to stop and **lost**.",
+   "MINES_WIN_EMB": "You were **able to stop** and won:",
+   "MINES_WIN": "Win",
 
    "TIMEOUT_TITLE": "Break!",
    "TIMEOUT_DESCRIPTION": "Use this command through"
