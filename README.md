@@ -1,6 +1,6 @@
 # Functional economic bot - Tomiko
 
-Tomiko - this is a bot that has 1+ commands and is ready to become an indispensable assistant for your Discord server
+Tomiko - this is a bot that has 7 commands and is ready to become an indispensable assistant for your Discord server
 
 - Play minigames with lights.
 - The bot can be completely reconfigured using `/settings`.
