@@ -1,7 +1,6 @@
 import disnake
 from disnake.ext import commands
 from utils import i18n
-from data import params
 
 
 class HelpCog(commands.Cog):
@@ -38,6 +37,8 @@ class HelpCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_dropdown(self, inter: disnake.MessageInteraction):
+        if not inter.user.id == inter.author.id:
+            return
         if isinstance(inter.component, disnake.StringSelectMenu) and inter.data.custom_id == "help":
             await inter.response.defer()
             locales = i18n.Init(inter)

@@ -8,6 +8,8 @@
    "MEMBER_DESCRIPTION": "Anyone on this server :)",
    "MONEY": "dollars",
    "MONEY_DESCRIPTION": "Number of dollars",
+   "RETURN": "Back",
+   "COST": "Course",
 
    "HELP": "help",
    "HELP_DESCRIPTION": "Shows help for all bot commands.",
@@ -29,6 +31,9 @@
    "PROFILE_EDIT_BTN": "Edit",
    "PROFILE_UP_BTN": "Improvements",
    "PROFILE_EXCHANGE_BTN" : "Exchange",
+   "MONEY_TO_FIRES": "Buy Fires",
+   "FIRES_TO_MONEY": "Sell Fires",
+   "HOW_MANY_FIRES": "Enter the number of fires",
 
    "REWARD": "reward",
    "REWARD_DESCRIPTION": "Make some money!",
@@ -79,7 +84,7 @@
    "MINES_DESCRIPTION": "Classic Minesweeper.",
    "MINES_EMB_DESCRIPTION": "> **Game Rules:**\n- Total field - **3 mines**\n- If a mine **explodes**, you lose\n- Each unexploded mine - **1.3x **",
    "MINES_LOST_EMB": "You failed to stop and **lost**.",
-   "MINES_WIN_EMB": "You were **able to stop** and won:",
+   "MINES_WIN_EMB": "You were **able to stop** and won",
    "MINES_WIN": "Win",
 
    "TIMEOUT_TITLE": "Break!",

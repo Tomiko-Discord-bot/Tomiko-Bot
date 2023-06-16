@@ -1,14 +1,18 @@
-from typing import Tuple, Any
-
 import disnake
 import pymongo
-from datetime import datetime as dt, datetime, timedelta
+from datetime import datetime as dt, timedelta
 
 db = pymongo.MongoClient()
 cluster = db["cluster_7"]
 guilds = cluster["settings"]
 users = cluster["users"]
 cooldown = cluster["cooldown"]
+info = cluster["info"]
+icons = cluster["icons"]
+beta = [
+    1101103184577048688,  # я
+    1037015480180949033,  # францез
+]
 
 
 def get_user(entry: disnake.Message | disnake.Member) -> dict:
@@ -23,6 +27,10 @@ def get_user(entry: disnake.Message | disnake.Member) -> dict:
 
     g = get_guild(entry.guild)
     item = users.find_one({"gid": guild.id, "id": member.id})
+    icon = icons.find_one({"id": member.id})
+    if not icon:
+        icon = {"id": member.id, "icons": ""}
+        icons.insert_one(icon)
     if not item:
         item = {
             "gid": guild.id,
@@ -33,6 +41,7 @@ def get_user(entry: disnake.Message | disnake.Member) -> dict:
             "banner": ""
         }
         users.insert_one(item)
+    item["icons"] = icon["icons"]
     return item
 
 

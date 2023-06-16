@@ -10,7 +10,7 @@ class Init:
         except KeyError:
             self.locale = "en-US"
 
-    def get(self, key):
+    def get(self, key) -> str:
         return self.inter.bot.i18n.get(key)[self.locale]
 
 
@@ -25,6 +25,16 @@ def timeout_emb(localisation: Init, time, member: disnake.Member) -> disnake.Emb
 
 
 def no_fires_emb(localisation: Init, member: disnake.Member) -> disnake.Embed:
+    embed = disnake.Embed(
+        title=f"{localisation.get('ERROR')}",
+        description=f"{localisation.get('NO_FIRES')}",
+        colour=disnake.Colour.red()
+    )
+    embed.set_thumbnail(url=member.display_avatar.url)
+    return embed
+
+
+def no_money_emb(localisation: Init, member: disnake.Member) -> disnake.Embed:
     embed = disnake.Embed(
         title=f"{localisation.get('ERROR')}",
         description=f"{localisation.get('NO_MONEY')}",

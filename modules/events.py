@@ -1,24 +1,53 @@
 import disnake
 from disnake.ext import commands, tasks
 from data import params
-from utils import database as db, i18n
+from utils import database as db
 from utils.time import get_time
+from datetime import datetime as dt
 
 
 class EventsCog(commands.Cog):
     def __init__(self, bot: commands.InteractionBot):
         self.bot = bot
+        self.t = round(dt.now().timestamp())
 
     @commands.Cog.listener()
     async def on_connect(self):
         print(f"[{get_time()}] Connected")
         self.print_ping.start()
+        self.info_loop.start()
 
     @tasks.loop(seconds=60)
     async def print_ping(self):
         text = f"Guilds: {len(self.bot.guilds)} Ping: {round(self.bot.latency*1000, 2)}ms"
         print(f"[{get_time()}] {text}")
         await self.bot.change_presence(activity=disnake.Activity(type=disnake.ActivityType.listening, name=text))
+
+    @tasks.loop(seconds=60)
+    async def info_loop(self):
+        channel = await self.bot.fetch_channel(1117480245075906601)
+        msg = await channel.fetch_message(1118254885234802749)
+        i = db.info.find_one({"Tomiko": "best"})
+        embed = disnake.Embed(
+            title="Статус — Tomiko",
+            colour=0x2b2d31
+        )
+        embed.description = f"""**Запущен:** <t:{self.t}:R>
+**Пинг:** {round(self.bot.latency*1000, 2)}ms
+**Серверов:** {len(self.bot.guilds)}
+**Использовано команд:** {i['commands_used']}
+        """
+        embed.set_footer(text="Обновляется каждые 60 секунд.")
+        embed.set_thumbnail(url=self.bot.user.display_avatar.url)
+        await msg.edit(embed=embed, components=[
+            disnake.ui.Button(label="Top.gg", emoji="<:topgg:1118253569594900610>", url="https://top.gg/", disabled=True),
+            disnake.ui.Button(label="Server-discord.com", emoji="<:sdc:1118253567673896960>", url="https://bots.server-discord.com/", disabled=True),
+            disnake.ui.Button(label="Boticord.top", emoji="<:boticord:1118253563911622699>", url="https://boticord.top/", disabled=True),
+        ])
+
+    @commands.Cog.listener()
+    async def on_application_command(self, inter: disnake.ApplicationCommandInteraction):
+        db.info.update_one({"Tomiko": "best"}, {"$inc": {"commands_used": 1}})
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: disnake.Guild):

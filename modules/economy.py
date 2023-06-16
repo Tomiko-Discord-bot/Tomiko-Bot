@@ -15,6 +15,7 @@ class EconomyCog(commands.Cog):
     def __init__(self, bot: commands.InteractionBot):
         self.bot = bot
         self.casino = {}
+        self.messages = {}
 
     @commands.slash_command(
         name=disnake.Localized(key="PROFILE"),
@@ -28,6 +29,8 @@ class EconomyCog(commands.Cog):
             title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
             colour=0x2b2d31
         )
+        embed.description = user["icons"] + "<:be:1119317469077717092><:ta:1119317471929839696>" \
+            if inter.author.id in db.beta else ""
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         status = user["status"] if user["status"] else locales.get("PROFILE_NONE")
         embed.add_field(
@@ -62,6 +65,7 @@ class EconomyCog(commands.Cog):
                 style=disnake.ButtonStyle.blurple
             )
         ])
+        self.messages[(await inter.original_message()).id] = inter.author.id
 
     @commands.slash_command(
         name=disnake.Localized(key="REWARD"),
@@ -110,7 +114,7 @@ class EconomyCog(commands.Cog):
     )):
         locales = i18n.Init(inter)
         u = db.get_user(inter.author)
-        if u["fires"] < bet:
+        if u["fires"] < bet or bet < 1:
             return await inter.send(embed=i18n.no_fires_emb(locales, inter.author))
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": -bet}})
         chance = random.randint(1, 3)
@@ -127,6 +131,7 @@ class EconomyCog(commands.Cog):
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         await inter.send(embed=embed, components=[disnake.ui.Button(label=locales.get("STOP"), custom_id="casino_stop")])
         self.casino[inter.author.id] = [inter.guild.id, True]
+        self.messages[(await inter.original_message()).id] = inter.author.id
         for i in r:
             if self.casino[inter.author.id][0] == inter.guild.id and self.casino[inter.author.id][1]:
                 embed.clear_fields()
@@ -183,7 +188,7 @@ class EconomyCog(commands.Cog):
         await inter.response.defer()
         u = db.get_user(inter.author)
         locales = i18n.Init(inter)
-        if u["money"] < money:
+        if u["money"] < money or money < 1:
             return await inter.send(embed=i18n.no_money_emb(locales, inter.author))
         if member.bot:
             return
@@ -206,7 +211,7 @@ class EconomyCog(commands.Cog):
         await inter.response.defer()
         u = db.get_user(inter.author)
         locales = i18n.Init(inter)
-        if u["fires"] < bet:
+        if u["fires"] < bet or bet < 1:
             return await inter.send(embed=i18n.no_fires_emb(locales, inter.author))
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": -bet}})
         boom = []
@@ -231,10 +236,15 @@ class EconomyCog(commands.Cog):
         )
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         await inter.send(embed=embed, components=buttons)
+        self.messages[(await inter.original_message()).id] = inter.author.id
 
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
-        if not inter.author.id == inter.user.id:
+        try:
+            author = self.messages[inter.message.id]
+        except KeyError:
+            return
+        if inter.author.id != author:
             return
         locales = i18n.Init(inter)
         if inter.component.custom_id == "casino_stop":
@@ -323,6 +333,133 @@ class EconomyCog(commands.Cog):
             )
             db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": round(bet*x)}})
             await inter.edit_original_message(embed=embed, components=buttons)
+        elif inter.component.custom_id == "profile_exchange":
+            await inter.response.defer()
+            g = db.get_guild(inter.guild)
+            embed = inter.message.embeds[0]
+            fields = embed.fields[1:]
+            embed.clear_fields()
+            embed.add_field(
+                name=f"<:information:1117477318890369074> {locales.get(key='COST')}",
+                value=f"```{g['cost']}$ = 1🔥```",
+                inline=False
+            )
+            for f in fields:
+                embed.add_field(
+                    name=f.name,
+                    value=f.value,
+                    inline=f.inline
+                )
+            await inter.edit_original_message(embed=embed, components=[
+                disnake.ui.Button(label=locales.get("MONEY_TO_FIRES"), custom_id="money_to_fires",
+                                  style=disnake.ButtonStyle.blurple),
+                disnake.ui.Button(label=locales.get("FIRES_TO_MONEY"), custom_id="fires_to_money",
+                                  style=disnake.ButtonStyle.blurple),
+                disnake.ui.Button(label=locales.get("RETURN"), custom_id="return_profile",
+                                  style=disnake.ButtonStyle.red),
+            ])
+        elif inter.component.custom_id == "money_to_fires":
+            await inter.response.send_modal(disnake.ui.Modal(
+                title=locales.get("MONEY_TO_FIRES"),
+                custom_id="money_to_fires",
+                components=[disnake.ui.TextInput(
+                    label=locales.get("HOW_MANY_FIRES"),
+                    max_length=9,
+                    custom_id="fires"
+                )]
+            ))
+        elif inter.component.custom_id == "fires_to_money":
+            await inter.response.send_modal(disnake.ui.Modal(
+                title=locales.get("FIRES_TO_MONEY"),
+                custom_id="fires_to_money",
+                components=[disnake.ui.TextInput(
+                    label=locales.get("HOW_MANY_FIRES"),
+                    max_length=9,
+                    custom_id="fires"
+                )]
+            ))
+        elif inter.component.custom_id == "return_profile":
+            await inter.response.defer()
+            u = db.get_user(inter.author)
+            embed = disnake.Embed(
+                title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
+                colour=0x2b2d31
+            )
+            embed.description = u["icons"] + "<:be:1119317469077717092><:ta:1119317471929839696>" \
+                if inter.author.id in db.beta else ""
+            embed.set_thumbnail(url=inter.author.display_avatar.url)
+            status = u["status"] if u["status"] else locales.get("PROFILE_NONE")
+            embed.add_field(
+                name=f"<:edit:1117546025859682484> {locales.get('PROFILE_EDIT')}",
+                value=f"```{status}```",
+                inline=False
+            )
+            embed.add_field(
+                name=f"<:dollar:1117546022856577084> {locales.get('PROFILE_MONEY')}",
+                value=f"```{u['money']}```",
+                inline=True
+            )
+            embed.add_field(
+                name=f"<:fire:1117506834371182592> {locales.get('PROFILE_FIRE')}",
+                value=f"```{u['fires']}```",
+                inline=True
+            )
+            await inter.edit_original_message(embed=embed, components=[
+                disnake.ui.Button(
+                    label=locales.get("PROFILE_EXCHANGE_BTN"),
+                    custom_id="profile_exchange",
+                    style=disnake.ButtonStyle.green
+                ),
+                disnake.ui.Button(
+                    label=locales.get("PROFILE_UP_BTN"),
+                    custom_id="profile_up",
+                    style=disnake.ButtonStyle.blurple
+                ),
+                disnake.ui.Button(
+                    label=locales.get("PROFILE_EDIT_BTN"),
+                    custom_id="profile_edit",
+                    style=disnake.ButtonStyle.blurple
+                )
+            ])
+
+    @commands.Cog.listener()
+    async def on_modal_submit(self, inter: disnake.ModalInteraction):
+        try:
+            author = self.messages[inter.message.id]
+        except KeyError:
+            return
+        if inter.author.id != author:
+            return
+        s = inter.custom_id.split("_")
+        if "to" in s:
+            await inter.response.defer(ephemeral=True)
+            try:
+                fires = int(inter.text_values["fires"])
+            except ValueError:
+                return await inter.send(f"{inter.text_values['fires']} не число!", ephemeral=True)
+            u = db.get_user(inter.author)
+            g = db.get_guild(inter.guild)
+            locales = i18n.Init(inter)
+            cost = int(g["cost"])
+            if inter.custom_id == "money_to_fires":
+                if int(fires * cost) > int(u["money"]) or fires < 1:
+                    return await inter.send(embed=i18n.no_money_emb(locales, inter.author), ephemeral=True)
+                embed = inter.message.embeds[0].to_dict()
+                embed["fields"][1]["value"] = f"```{u['money']-(fires*cost)}```"
+                embed["fields"][2]["value"] = f"```{u['fires']+fires}```"
+                db.users.update_one({"gid": inter.guild.id, "id": inter.author.id},
+                                    {"$inc": {"money": -(int(fires*cost)), "fires": fires}})
+                await inter.message.edit(embed=disnake.Embed().from_dict(embed))
+            elif inter.custom_id == "fires_to_money":
+                if int(u["fires"]) < int(fires) or fires < 1:
+                    return await inter.send(embed=i18n.no_fires_emb(locales, inter.author), ephemeral=True)
+                embed = inter.message.embeds[0].to_dict()
+                embed["fields"][1]["value"] = f"```{u['money']+round(fires/cost)}```"
+                embed["fields"][2]["value"] = f"```{u['fires']-fires}```"
+                db.users.update_one({"gid": inter.guild.id, "id": inter.author.id},
+                                    {"$inc": {"money": round(fires/cost), "fires": -fires}})
+                await inter.message.edit(embed=disnake.Embed().from_dict(embed))
+            await inter.send("✅")
 
 
 def setup(bot):
