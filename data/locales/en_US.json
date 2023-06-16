@@ -59,6 +59,7 @@
    "SETTINGS_MAX_BTN" : "Max reward",
    "SETTINGS_MAX_DESCR": "Change max reward",
    "SETTINGS_TIMEOUT_BTN": "Break",
+   "SETTINGS_TIMEOUT_REWARD_BTN" : "Break",
    "SETTINGS_TIMEOUT_DESCR": "Change break time",
    "SETTINGS_COST_BTN": "Course",
    "SETTINGS_COST_DESCR": "Change the amount of money to buy a Wisp",

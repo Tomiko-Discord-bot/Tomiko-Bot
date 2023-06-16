@@ -57,12 +57,14 @@ class EconomyCog(commands.Cog):
             disnake.ui.Button(
                 label=locales.get("PROFILE_UP_BTN"),
                 custom_id="profile_up",
-                style=disnake.ButtonStyle.blurple
+                style=disnake.ButtonStyle.blurple,
+                disabled=True
             ),
             disnake.ui.Button(
                 label=locales.get("PROFILE_EDIT_BTN"),
                 custom_id="profile_edit",
-                style=disnake.ButtonStyle.blurple
+                style=disnake.ButtonStyle.blurple,
+                disabled=True
             )
         ])
         self.messages[(await inter.original_message()).id] = inter.author.id
@@ -77,7 +79,7 @@ class EconomyCog(commands.Cog):
         locales = i18n.Init(inter)
         if t[0]:
             g = db.get_guild(inter.guild)
-            reward = random.randint(g["reward"][0], g["reward"][1])
+            reward = random.randint(g["min"], g["max"])
             embed = disnake.Embed(
                 title=f"{locales.get('REWARD').capitalize()} — {inter.author.display_name.capitalize()}",
                 colour=0x2b2d31
@@ -413,12 +415,14 @@ class EconomyCog(commands.Cog):
                 disnake.ui.Button(
                     label=locales.get("PROFILE_UP_BTN"),
                     custom_id="profile_up",
-                    style=disnake.ButtonStyle.blurple
+                    style=disnake.ButtonStyle.blurple,
+                    disabled=True
                 ),
                 disnake.ui.Button(
                     label=locales.get("PROFILE_EDIT_BTN"),
                     custom_id="profile_edit",
-                    style=disnake.ButtonStyle.blurple
+                    style=disnake.ButtonStyle.blurple,
+                    disabled=True
                 )
             ])
 
@@ -454,12 +458,12 @@ class EconomyCog(commands.Cog):
                 if int(u["fires"]) < int(fires) or fires < 1:
                     return await inter.send(embed=i18n.no_fires_emb(locales, inter.author), ephemeral=True)
                 embed = inter.message.embeds[0].to_dict()
-                embed["fields"][1]["value"] = f"```{u['money']+round(fires/cost)}```"
+                embed["fields"][1]["value"] = f"```{u['money']+round(fires*cost)}```"
                 embed["fields"][2]["value"] = f"```{u['fires']-fires}```"
                 db.users.update_one({"gid": inter.guild.id, "id": inter.author.id},
-                                    {"$inc": {"money": round(fires/cost), "fires": -fires}})
+                                    {"$inc": {"money": round(fires*cost), "fires": -fires}})
                 await inter.message.edit(embed=disnake.Embed().from_dict(embed))
-            await inter.send("✅")
+            await inter.delete_original_response()
 
 
 def setup(bot):

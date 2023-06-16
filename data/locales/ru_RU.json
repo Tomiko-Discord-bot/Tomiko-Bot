@@ -59,6 +59,7 @@
   "SETTINGS_MAX_BTN": "Максимальная награда",
   "SETTINGS_MAX_DESCR": "Изменить максимальное кол-во награды",
   "SETTINGS_TIMEOUT_BTN": "Перерыв",
+  "SETTINGS_TIMEOUT_REWARD_BTN": "Перерыв",
   "SETTINGS_TIMEOUT_DESCR": "Изменить время перерыва",
   "SETTINGS_COST_BTN": "Курс",
   "SETTINGS_COST_DESCR": "Изменить кол-во денег для покупки огонька",
