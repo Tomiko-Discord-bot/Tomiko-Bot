@@ -13,6 +13,7 @@ beta = [
     1101103184577048688,  # я
     1037015480180949033,  # францез
 ]
+beta_test = True
 
 
 def get_user(entry: disnake.Message | disnake.Member) -> dict:
@@ -29,14 +30,14 @@ def get_user(entry: disnake.Message | disnake.Member) -> dict:
     item = users.find_one({"gid": guild.id, "id": member.id})
     icon = icons.find_one({"id": member.id})
     if not icon:
-        icon = {"id": member.id, "icons": ""}
+        icon = {"id": member.id, "icons": "<:be:1119317469077717092><:ta:1119317471929839696>" if beta_test else ""}
         icons.insert_one(icon)
     if not item:
         item = {
             "gid": guild.id,
             "id": member.id,
             "status": "",
-            "money": g['start_balance'],
+            "money": g['startbal'],
             "fires": 0,
             "banner": ""
         }
@@ -50,8 +51,9 @@ def get_guild(guild: disnake.Guild) -> dict:
     if not item:
         item = {
             "gid": guild.id,
-            "start_balance": 250,
-            "reward": [100, 500],
+            "startbal": 250,
+            "min": 100,
+            "max": 500,
             "timeout_reward": 2,  # hours
             "cost": 25
         }
