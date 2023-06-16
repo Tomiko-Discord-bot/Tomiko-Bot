@@ -15,6 +15,12 @@ class DevCog(commands.Cog):
         db.icons.update_one({"id": user.id}, {"$set": {"icons": icons + f" {icon}"}})
         await inter.send(f"Выдано {icon} челику {user.display_name}")
 
+    @commands.slash_command(hidden=True, guild_ids=[1101154269509451847])
+    async def create_info(self, inter):
+        if inter.author.id != 1101103184577048688:
+            return
+        db.info.insert_one({"Tomiko": "best", "commands_used": 0})
+
 
 def setup(bot):
     bot.add_cog(DevCog(bot))

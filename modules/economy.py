@@ -29,8 +29,7 @@ class EconomyCog(commands.Cog):
             title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
             colour=0x2b2d31
         )
-        embed.description = user["icons"] + "<:be:1119317469077717092><:ta:1119317471929839696>" \
-            if inter.author.id in db.beta else ""
+        embed.description = user["icons"]
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         status = user["status"] if user["status"] else locales.get("PROFILE_NONE")
         embed.add_field(
@@ -387,8 +386,7 @@ class EconomyCog(commands.Cog):
                 title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
                 colour=0x2b2d31
             )
-            embed.description = u["icons"] + "<:be:1119317469077717092><:ta:1119317471929839696>" \
-                if inter.author.id in db.beta else ""
+            embed.description = u["icons"]
             embed.set_thumbnail(url=inter.author.display_avatar.url)
             status = u["status"] if u["status"] else locales.get("PROFILE_NONE")
             embed.add_field(

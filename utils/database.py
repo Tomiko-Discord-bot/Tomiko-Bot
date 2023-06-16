@@ -3,16 +3,13 @@ import pymongo
 from datetime import datetime as dt, timedelta
 
 db = pymongo.MongoClient()
-cluster = db["cluster_7"]
+cluster = db["Tomiko"]
 guilds = cluster["settings"]
 users = cluster["users"]
 cooldown = cluster["cooldown"]
 info = cluster["info"]
 icons = cluster["icons"]
-beta = [
-    1101103184577048688,  # я
-    1037015480180949033,  # францез
-]
+beta = [0]
 beta_test = True
 
 
