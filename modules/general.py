@@ -9,6 +9,18 @@ class GeneralCog(commands.Cog):
         self.messages = {}
 
     @commands.slash_command(
+        name=disnake.Localized(key="WIPE"),
+        description=disnake.Localized(key="WIPE_DESCRIPTION"),
+        default_member_permissions=disnake.Permissions(administrator=True)
+    )
+    async def wipe(self, inter: disnake.ApplicationCommandInteraction):
+        locales = i18n.Init(inter)
+        await inter.send(locales.get("WIPE_1"))
+        db.users.delete_many({})
+        db.cooldown.delete_many({})
+        await inter.edit_original_message(locales.get("WIPE_2"))
+
+    @commands.slash_command(
         name=disnake.Localized(key="SETTINGS"),
         description=disnake.Localized(key="SETTINGS_DESCRIPTION"),
         default_member_permissions=disnake.Permissions(administrator=True)
@@ -99,11 +111,13 @@ class GeneralCog(commands.Cog):
     async def on_modal_submit(self, inter: disnake.ModalInteraction):
         if inter.custom_id == "settings":
             await inter.response.defer(ephemeral=True)
+            g = db.get_guild(inter.guild)
             component = inter.data.components[0]["components"][0]
+            locales = i18n.Init(inter)
             try:
                 value = int(component["value"])
             except ValueError:
-                return await inter.send(f"{component['value']} - не число!")
+                return await inter.send(f"{component['value']} - {locales.get('NO_INT')}")
             custom_id = component["custom_id"]
             embed = inter.message.embeds[0].to_dict()
             fields = embed["fields"]
@@ -114,6 +128,12 @@ class GeneralCog(commands.Cog):
                 "max": 3,
                 "timeout_reward": 4
             }
+            if values[custom_id] == 2:
+                if g["max"] < int(value):
+                    return await inter.send(embed=i18n.error_emb(locales, inter.author))
+            elif values[custom_id] == 3:
+                if g["min"] > int(value):
+                    return await inter.send(embed=i18n.error_emb(locales, inter.author))
             fields[values[custom_id]]["value"] = f"```{value}```"
             db.guilds.update_one({"gid": inter.guild.id}, {"$set": {custom_id: value}})
             await inter.message.edit(embed=disnake.Embed().from_dict(embed))

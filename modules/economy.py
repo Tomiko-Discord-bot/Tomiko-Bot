@@ -31,6 +31,7 @@ class EconomyCog(commands.Cog):
         )
         embed.description = user["icons"]
         embed.set_thumbnail(url=inter.author.display_avatar.url)
+        embed.set_image(url=user["banner"] if user["banner"] else None)
         status = user["status"] if user["status"] else locales.get("PROFILE_NONE")
         embed.add_field(
             name=f"<:edit:1117546025859682484> {locales.get('PROFILE_EDIT')}",
@@ -62,8 +63,7 @@ class EconomyCog(commands.Cog):
             disnake.ui.Button(
                 label=locales.get("PROFILE_EDIT_BTN"),
                 custom_id="profile_edit",
-                style=disnake.ButtonStyle.blurple,
-                disabled=True
+                style=disnake.ButtonStyle.blurple
             )
         ])
         self.messages[(await inter.original_message()).id] = inter.author.id
@@ -92,18 +92,6 @@ class EconomyCog(commands.Cog):
             await inter.send(embed=embed)
         else:
             await inter.send(embed=i18n.timeout_emb(locales, t[1], inter.author))
-
-    @commands.slash_command(
-        name=disnake.Localized(key="WIPE"),
-        description=disnake.Localized(key="WIPE_DESCRIPTION"),
-        default_member_permissions=disnake.Permissions(administrator=True)
-    )
-    async def wipe(self, inter: disnake.ApplicationCommandInteraction):
-        locales = i18n.Init(inter)
-        await inter.send(locales.get("WIPE_1"))
-        db.users.delete_many({})
-        db.cooldown.delete_many({})
-        await inter.edit_original_message(locales.get("WIPE_2"))
 
     @commands.slash_command(
         name=disnake.Localized(key="CASINO"),
@@ -388,6 +376,7 @@ class EconomyCog(commands.Cog):
             )
             embed.description = u["icons"]
             embed.set_thumbnail(url=inter.author.display_avatar.url)
+            embed.set_image(url=u["banner"] if u["banner"] else None)
             status = u["status"] if u["status"] else locales.get("PROFILE_NONE")
             embed.add_field(
                 name=f"<:edit:1117546025859682484> {locales.get('PROFILE_EDIT')}",
@@ -419,10 +408,50 @@ class EconomyCog(commands.Cog):
                 disnake.ui.Button(
                     label=locales.get("PROFILE_EDIT_BTN"),
                     custom_id="profile_edit",
-                    style=disnake.ButtonStyle.blurple,
-                    disabled=True
+                    style=disnake.ButtonStyle.blurple
                 )
             ])
+        elif inter.component.custom_id == "profile_edit":
+            await inter.response.defer(ephemeral=True)
+            await inter.edit_original_message(components=[
+                disnake.ui.Button(
+                    label=locales.get("EDIT_DESCRIPTION"),
+                    custom_id="edit_descr",
+                    style=disnake.ButtonStyle.blurple
+                ),
+                disnake.ui.Button(
+                    label=locales.get("EDIT_BANNER"),
+                    custom_id="edit_banner",
+                    style=disnake.ButtonStyle.blurple
+                ),
+                disnake.ui.Button(
+                    label=locales.get("RETURN"),
+                    custom_id="return_profile",
+                    style=disnake.ButtonStyle.red
+                )
+            ])
+        elif inter.component.custom_id == "edit_descr":
+            await inter.response.send_modal(disnake.ui.Modal(
+                title=locales.get("EDIT_DESCRIPTION"),
+                custom_id="edit_descr",
+                components=[
+                    disnake.ui.TextInput(
+                        label=locales.get("EDIT_DESCRIPTION") + ":",
+                        custom_id="edit_descr"
+                    )
+                ]
+            ))
+        elif inter.component.custom_id == "edit_banner":
+            await inter.response.send_modal(disnake.ui.Modal(
+                title=locales.get("EDIT_BANNER"),
+                custom_id="edit_banner",
+                components=[
+                    disnake.ui.TextInput(
+                        label=locales.get("EDIT_BANNER") + ":",
+                        custom_id="edit_banner"
+                    )
+                ]
+            ))
 
     @commands.Cog.listener()
     async def on_modal_submit(self, inter: disnake.ModalInteraction):
@@ -461,6 +490,22 @@ class EconomyCog(commands.Cog):
                 db.users.update_one({"gid": inter.guild.id, "id": inter.author.id},
                                     {"$inc": {"money": round(fires*cost), "fires": -fires}})
                 await inter.message.edit(embed=disnake.Embed().from_dict(embed))
+            await inter.delete_original_response()
+        if "edit" in s:
+            await inter.response.defer(ephemeral=True)
+            if s[1] == "descr":
+                embed = inter.message.embeds[0]
+                fields = embed.fields
+                fields[0].value = f"```{inter.text_values['edit_descr']}```"
+                db.users.update_one({"id": inter.author.id, "gid": inter.guild.id},
+                                    {"$set": {"status": inter.text_values['edit_descr']}})
+                await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
+            elif s[1] == "banner":
+                embed = inter.message.embeds[0]
+                embed.set_image(url=inter.text_values['edit_banner'])
+                db.users.update_one({"id": inter.author.id, "gid": inter.guild.id},
+                                    {"$set": {"banner": inter.text_values['edit_banner']}})
+                await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
             await inter.delete_original_response()
 
 

@@ -20,6 +20,7 @@ class DevCog(commands.Cog):
         if inter.author.id != 1101103184577048688:
             return
         db.info.insert_one({"Tomiko": "best", "commands_used": 0})
+        await inter.send("✅")
 
 
 def setup(bot):

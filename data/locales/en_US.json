@@ -10,6 +10,7 @@
    "MONEY_DESCRIPTION": "Number of dollars",
    "RETURN": "Back",
    "COST": "Course",
+   "NO_INT": "not a number!",
 
    "HELP": "help",
    "HELP_DESCRIPTION": "Shows help for all bot commands.",
@@ -34,6 +35,8 @@
    "MONEY_TO_FIRES": "Buy Fires",
    "FIRES_TO_MONEY": "Sell Fires",
    "HOW_MANY_FIRES": "Enter the number of fires",
+   "EDIT_DESCRIPTION": "Set Status",
+   "EDIT_BANNER": "Set banner",
 
    "REWARD": "reward",
    "REWARD_DESCRIPTION": "Make some money!",

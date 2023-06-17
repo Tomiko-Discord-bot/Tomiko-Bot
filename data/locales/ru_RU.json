@@ -10,6 +10,7 @@
   "MONEY_DESCRIPTION": "Количество долларов",
   "RETURN": "Назад",
   "COST": "Курс",
+  "NO_INT": "не число!",
 
   "HELP": "хелп",
   "HELP_DESCRIPTION": "Показывает справку по всем командам бота.",
@@ -34,6 +35,8 @@
   "MONEY_TO_FIRES": "Купить огоньки",
   "FIRES_TO_MONEY": "Продать огоньки",
   "HOW_MANY_FIRES": "Введите количество огоньков",
+  "EDIT_DESCRIPTION": "Установить статус",
+  "EDIT_BANNER": "Установить баннер",
 
   "REWARD": "награда",
   "REWARD_DESCRIPTION": "Заработай немного денег!",

@@ -58,7 +58,7 @@ def get_guild(guild: disnake.Guild) -> dict:
     return item
 
 
-def get_timeout(user: disnake.Member, cmd: str) -> tuple[bool, int] | tuple[bool, timedelta]:
+def get_timeout(user: disnake.Member, cmd: str) -> tuple[bool, int] | tuple[bool, dt]:
     now = dt.now()
     c = cooldown.find_one({"gid": user.guild.id, "id": user.id, "cmd": cmd})
     if not c:
@@ -67,6 +67,6 @@ def get_timeout(user: disnake.Member, cmd: str) -> tuple[bool, int] | tuple[bool
     g = get_guild(user.guild)
     to = g[f"timeout_{cmd}"] * 60 * 60  # hours
     if (now - c["c"]).total_seconds() < to:
-        return False, timedelta(seconds=to - (now - c["c"]).total_seconds())
+        return False, dt.now() + timedelta(seconds=to - (now - c["c"]).total_seconds())
     cooldown.update_one({"gid": user.guild.id, "id": user.id, "cmd": cmd}, {"$set": {"c": now}})
     return True, 0
