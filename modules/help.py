@@ -35,9 +35,9 @@ class HelpCog(commands.Cog):
             value="general"
         )
         select.add_option(
-            label=locales.get("HELP_PRO"),
+            label=locales.get("HELP_PREMIUM"),
             emoji="<:premium:1119969423093137438>",
-            description=locales.get("HELP_PRO_DESCRIPTION"),
+            description=locales.get("HELP_PREMIUM_DESCRIPTION"),
             value="premium"
         )
         await inter.send(embed=embed, components=[select])
@@ -52,7 +52,7 @@ class HelpCog(commands.Cog):
             category = inter.data.values[0]
             cmds = []
             for cmd in self.bot.get_cog(f"{category.capitalize()}Cog").get_slash_commands():
-                cmds.append("`"+cmd.qualified_name+"`")
+                cmds.append("`/"+cmd.qualified_name+"`")
             embed.add_field(
                 name=locales.get(f"HELP_{category.upper()}_EMOJI")+" — "+locales.get(f"HELP_{category.upper()}"),
                 value=" ".join(cmds)

@@ -11,6 +11,8 @@
   "RETURN": "Назад",
   "COST": "Курс",
   "NO_INT": "не число!",
+  "PRO": "про",
+  "PRO_DESCRIPTION": "Команды для подписчиков TomikoPro",
 
   "HELP": "хелп",
   "HELP_DESCRIPTION": "Показывает справку по всем командам бота.",
@@ -22,9 +24,9 @@
   "HELP_GENERAL": "Основные",
   "HELP_GENERAL_DESCRIPTION": "Всякие настройки?!",
   "HELP_GENERAL_EMOJI": "<:edit:1117546025859682484>",
-  "HELP_PRO": "Премиум",
-  "HELP_PRO_DESCRIPTION": "TomikoPro",
-  "HELP_PRO_EMOJI": "<:premium:1119969423093137438>",
+  "HELP_PREMIUM": "Премиум",
+  "HELP_PREMIUM_DESCRIPTION": "TomikoPro",
+  "HELP_PREMIUM_EMOJI": "<:premium:1119969423093137438>",
 
   "PROFILE": "профиль",
   "PROFILE_DESCRIPTION": "Профиль пользователя.",
@@ -45,6 +47,9 @@
   "REWARD_DESCRIPTION": "Заработай немного денег!",
   "REWARD_FIELD_NAME": "Ваша награда:",
   "REWARD_FIELD_VALUE": "Вы успешно забрали",
+
+  "TIMELY": "награда",
+  "TIMELY_DESCRIPTION": "Заработай немного денег!",
 
   "WIPE": "вайп",
   "WIPE_DESCRIPTION": "Обнулить всех пользователей сервера.",

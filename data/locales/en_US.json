@@ -11,6 +11,8 @@
    "RETURN": "Back",
    "COST": "Course",
    "NO_INT": "not a number!",
+   "PRO": "pro",
+   "PRO_DESCRIPTION": "Commands for TomikoPro subscribers",
 
    "HELP": "help",
    "HELP_DESCRIPTION": "Shows help for all bot commands.",
@@ -22,9 +24,9 @@
    "HELP_GENERAL": "General",
    "HELP_GENERAL_DESCRIPTION": "Any settings?!",
    "HELP_GENERAL_EMOJI": "<:edit:1117546025859682484>",
-   "HELP_PRO": "Premium",
-   "HELP_PRO_DESCRIPTION": "TomikoPro",
-   "HELP_PRO_EMOJI": "<:premium:1119969423093137438>",
+   "HELP_PREMIUM": "Premium",
+   "HELP_PREMIUM_DESCRIPTION": "TomikoPro",
+   "HELP_PREMIUM_EMOJI": "<:premium:1119969423093137438>",
 
    "PROFILE": "profile",
    "PROFILE_DESCRIPTION": "User profile.",
@@ -45,6 +47,9 @@
    "REWARD_DESCRIPTION": "Make some money!",
    "REWARD_FIELD_NAME": "Your reward is:",
    "REWARD_FIELD_VALUE": "You have successfully collected",
+
+   "TIMELY": "reward",
+   "TIMELY_DESCRIPTION": "Earn some money!",
 
    "WIPE": "wipe",
    "WIPE_DESCRIPTION": "Reset all server users.",
