@@ -34,6 +34,12 @@ class HelpCog(commands.Cog):
             description=locales.get("HELP_GENERAL_DESCRIPTION"),
             value="general"
         )
+        select.add_option(
+            label=locales.get("HELP_PRO"),
+            emoji="<:premium:1119969423093137438>",
+            description=locales.get("HELP_PRO_DESCRIPTION"),
+            value="pro"
+        )
         await inter.send(embed=embed, components=[select])
 
     @commands.Cog.listener()
