@@ -22,6 +22,9 @@
    "HELP_GENERAL": "General",
    "HELP_GENERAL_DESCRIPTION": "Any settings?!",
    "HELP_GENERAL_EMOJI": "<:edit:1117546025859682484>",
+   "HELP_PRO": "Premium",
+   "HELP_PRO_DESCRIPTION": "TomikoPro",
+   "HELP_PRO_EMOJI": "<:premium:1119969423093137438>",
 
    "PROFILE": "profile",
    "PROFILE_DESCRIPTION": "User profile.",
