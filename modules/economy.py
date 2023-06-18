@@ -29,7 +29,8 @@ class EconomyCog(commands.Cog):
             title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
             colour=0x2b2d31
         )
-        embed.description = user["icons"]
+        embed.description = user["icons"] + ("<:TomikoPro:1120020955863990282>" if await db.get_premium(
+            self.bot, inter.author.id) else "")
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         embed.set_image(url=user["banner"] if user["banner"] else None)
         status = user["status"] if user["status"] else locales.get("PROFILE_NONE")
@@ -374,7 +375,8 @@ class EconomyCog(commands.Cog):
                 title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
                 colour=0x2b2d31
             )
-            embed.description = u["icons"]
+            embed.description = u["icons"] + ("<:TomikoPro:1120020955863990282>" if await db.get_premium(
+                self.bot, inter.author.id) else "")
             embed.set_thumbnail(url=inter.author.display_avatar.url)
             embed.set_image(url=u["banner"] if u["banner"] else None)
             status = u["status"] if u["status"] else locales.get("PROFILE_NONE")
@@ -494,12 +496,12 @@ class EconomyCog(commands.Cog):
         if "edit" in s:
             await inter.response.defer(ephemeral=True)
             if s[1] == "descr":
-                embed = inter.message.embeds[0]
-                fields = embed.fields
-                fields[0].value = f"```{inter.text_values['edit_descr'][:1000]}```"
+                embed = inter.message.embeds[0].to_dict()
+                fields = embed["fields"]
+                fields[0]["value"] = f"```{inter.text_values['edit_descr'][:1000]}```"
                 db.users.update_one({"id": inter.author.id, "gid": inter.guild.id},
                                     {"$set": {"status": inter.text_values['edit_descr'][:1000]}})
-                await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
+                await inter.message.edit(embed=disnake.Embed().from_dict(embed))
             elif s[1] == "banner":
                 embed = inter.message.embeds[0]
                 try:

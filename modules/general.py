@@ -44,11 +44,11 @@ class GeneralCog(commands.Cog):
         )
         embed.add_field(
             name=locales.get("SETTINGS_MIN"),
-            value=f"```{g['min']}```"
+            value=f"```{g['reward_min']}```"
         )
         embed.add_field(
             name=locales.get("SETTINGS_MAX"),
-            value=f"```{g['max']}```"
+            value=f"```{g['reward_max']}```"
         )
         embed.add_field(
             name=locales.get("SETTINGS_REWARD_TIMEOUT"),
@@ -70,13 +70,13 @@ class GeneralCog(commands.Cog):
         select.add_option(
             label=locales.get("SETTINGS_MIN_BTN"),
             description=locales.get("SETTINGS_MIN_DESCR"),
-            value="min",
+            value="reward_min",
             emoji="<:arrow:1117858180249178245>"
         )
         select.add_option(
             label=locales.get("SETTINGS_MAX_BTN"),
             description=locales.get("SETTINGS_MAX_DESCR"),
-            value="max",
+            value="reward_max",
             emoji="<:arrow:1117858180249178245>"
         )
         select.add_option(
@@ -126,15 +126,15 @@ class GeneralCog(commands.Cog):
             values = {
                 "startbal": 0,
                 "cost": 1,
-                "min": 2,
-                "max": 3,
+                "reward_min": 2,
+                "reward_max": 3,
                 "timeout_reward": 4
             }
             if values[custom_id] == 2:
-                if g["max"] < int(value):
+                if g["reward_max"] < int(value):
                     return await inter.send(embed=i18n.error_emb(locales, inter.author))
             elif values[custom_id] == 3:
-                if g["min"] > int(value):
+                if g["reward_min"] > int(value):
                     return await inter.send(embed=i18n.error_emb(locales, inter.author))
             fields[values[custom_id]]["value"] = f"```{value}```"
             db.guilds.update_one({"gid": inter.guild.id}, {"$set": {custom_id: value}})

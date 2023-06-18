@@ -13,6 +13,7 @@
    "NO_INT": "not a number!",
    "PRO": "pro",
    "PRO_DESCRIPTION": "Commands for TomikoPro subscribers",
+   "NO_PREMIUM": "You don't have (TomikoPro)[https://boosty.to/tomikobot]!",
 
    "HELP": "help",
    "HELP_DESCRIPTION": "Shows help for all bot commands.",

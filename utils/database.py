@@ -2,6 +2,8 @@ import disnake
 import pymongo
 from datetime import datetime as dt, timedelta
 
+from disnake.ext import commands
+
 db = pymongo.MongoClient()
 cluster = db["Tomiko"]
 guilds = cluster["settings"]
@@ -36,8 +38,7 @@ def get_user(entry: disnake.Message | disnake.Member) -> dict:
             "status": "",
             "money": g['startbal'],
             "fires": 0,
-            "banner": "",
-            "premium": False
+            "banner": ""
         }
         users.insert_one(item)
     item["icons"] = icon["icons"]
@@ -53,7 +54,8 @@ def get_guild(guild: disnake.Guild) -> dict:
             "min": 100,
             "max": 500,
             "timeout_reward": 2,  # hours
-            "cost": 25
+            "cost": 25,
+            "timeout_timely": 1
         }
         guilds.insert_one(item)
     return item
@@ -71,3 +73,13 @@ def get_timeout(user: disnake.Member, cmd: str) -> tuple[bool, int] | tuple[bool
         return False, dt.now() + timedelta(seconds=to - (now - c["c"]).total_seconds())
     cooldown.update_one({"gid": user.guild.id, "id": user.id, "cmd": cmd}, {"$set": {"c": now}})
     return True, 0
+
+
+async def get_premium(bot: commands.InteractionBot, user: int):
+    g = await bot.fetch_guild(1117477749771210754)
+    u = await g.fetch_member(user)
+    r = disnake.utils.get(await g.fetch_roles(), id=1119300923899003033)
+    if u:
+        if r in u.roles:
+            return True
+    return False

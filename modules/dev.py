@@ -26,7 +26,7 @@ class DevCog(commands.Cog):
     async def update(self, inter, collection: str, values: str):
         if inter.author.id != 1101103184577048688:
             return
-        await db.cluster[collection].update_many({}, {"$set": dict(values)})
+        db.cluster[collection].update_many({}, {"$set": eval(values)})
         await inter.send("✅")
 
 
