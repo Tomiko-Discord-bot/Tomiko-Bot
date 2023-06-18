@@ -496,9 +496,9 @@ class EconomyCog(commands.Cog):
             if s[1] == "descr":
                 embed = inter.message.embeds[0]
                 fields = embed.fields
-                fields[0].value = f"```{inter.text_values['edit_descr']}```"
+                fields[0].value = f"```{inter.text_values['edit_descr'][:1000]}```"
                 db.users.update_one({"id": inter.author.id, "gid": inter.guild.id},
-                                    {"$set": {"status": inter.text_values['edit_descr']}})
+                                    {"$set": {"status": inter.text_values['edit_descr'][:1000]}})
                 await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
             elif s[1] == "banner":
                 embed = inter.message.embeds[0]
