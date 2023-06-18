@@ -36,7 +36,8 @@ def get_user(entry: disnake.Message | disnake.Member) -> dict:
             "status": "",
             "money": g['startbal'],
             "fires": 0,
-            "banner": ""
+            "banner": "",
+            "premium": False
         }
         users.insert_one(item)
     item["icons"] = icon["icons"]
