@@ -461,6 +461,7 @@ class EconomyCog(commands.Cog):
             return
         if inter.author.id != author:
             return
+        locales = i18n.Init(inter)
         s = inter.custom_id.split("_")
         if "to" in s:
             await inter.response.defer(ephemeral=True)
@@ -470,7 +471,6 @@ class EconomyCog(commands.Cog):
                 return await inter.send(f"{inter.text_values['fires']} не число!", ephemeral=True)
             u = db.get_user(inter.author)
             g = db.get_guild(inter.guild)
-            locales = i18n.Init(inter)
             cost = int(g["cost"])
             if inter.custom_id == "money_to_fires":
                 if int(fires * cost) > int(u["money"]) or fires < 1:
@@ -502,7 +502,10 @@ class EconomyCog(commands.Cog):
                 await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
             elif s[1] == "banner":
                 embed = inter.message.embeds[0]
-                embed.set_image(url=inter.text_values['edit_banner'])
+                try:
+                    embed.set_image(url=inter.text_values['edit_banner'])
+                except (Exception,):
+                    return await inter.send(embed=i18n.error_emb(locales, inter.author))
                 db.users.update_one({"id": inter.author.id, "gid": inter.guild.id},
                                     {"$set": {"banner": inter.text_values['edit_banner']}})
                 await inter.message.edit(embed=disnake.Embed().from_dict(embed.to_dict()))
