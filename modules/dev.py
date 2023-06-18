@@ -23,10 +23,10 @@ class DevCog(commands.Cog):
         await inter.send("✅")
 
     @commands.slash_command(hidden=True, guild_ids=[1101154269509451847])
-    async def update(self, inter, collection: str, values: dict):
+    async def update(self, inter, collection: str, values: str):
         if inter.author.id != 1101103184577048688:
             return
-        await db.cluster[collection].update_many({}, {"$set": values})
+        await db.cluster[collection].update_many({}, {"$set": dict(values)})
         await inter.send("✅")
 
 
