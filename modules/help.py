@@ -38,7 +38,7 @@ class HelpCog(commands.Cog):
             label=locales.get("HELP_PRO"),
             emoji="<:premium:1119969423093137438>",
             description=locales.get("HELP_PRO_DESCRIPTION"),
-            value="pro"
+            value="premium"
         )
         await inter.send(embed=embed, components=[select])
 
