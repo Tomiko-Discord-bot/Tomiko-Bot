@@ -118,6 +118,8 @@ class GeneralCog(commands.Cog):
                 value = int(component["value"])
             except ValueError:
                 return await inter.send(f"{component['value']} - {locales.get('NO_INT')}")
+            if value < 1:
+                return await inter.send(embed=i18n.error_emb(locales, inter.author))
             custom_id = component["custom_id"]
             embed = inter.message.embeds[0].to_dict()
             fields = embed["fields"]

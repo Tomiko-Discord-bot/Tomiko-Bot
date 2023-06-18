@@ -22,6 +22,13 @@ class DevCog(commands.Cog):
         db.info.insert_one({"Tomiko": "best", "commands_used": 0})
         await inter.send("✅")
 
+    @commands.slash_command(hidden=True, guild_ids=[1101154269509451847])
+    async def update(self, inter, collection: str, values: dict):
+        if inter.author.id != 1101103184577048688:
+            return
+        await db.cluster[collection].update_many({}, {"$set": values})
+        await inter.send("✅")
+
 
 def setup(bot):
     bot.add_cog(DevCog(bot))
