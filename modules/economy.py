@@ -119,7 +119,8 @@ class EconomyCog(commands.Cog):
             description=locales.get("CASINO_EMB_DESCR")
         )
         embed.set_thumbnail(url=inter.author.display_avatar.url)
-        await inter.send(embed=embed, components=[disnake.ui.Button(label=locales.get("STOP"), custom_id="casino_stop")])
+        await inter.send(embed=embed, components=[disnake.ui.Button(label=locales.get("STOP"),
+                                                                    custom_id="casino_stop")])
         self.casino[inter.author.id] = [inter.guild.id, True]
         self.messages[(await inter.original_message()).id] = inter.author.id
         for i in r:
@@ -186,7 +187,8 @@ class EconomyCog(commands.Cog):
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"money": -money}})
         embed = disnake.Embed(
             title=f"{locales.get('PAY').capitalize()} — {inter.author.display_name.capitalize()}",
-            description=locales.get("PAY_EMB").replace("{dollars}", str(money)).replace("{member}", member.display_name.capitalize())
+            description=locales.get("PAY_EMB").replace("{dollars}",
+                                                       str(money)).replace("{member}", member.display_name.capitalize())
         )
         await inter.send(embed=embed)
 
@@ -205,6 +207,7 @@ class EconomyCog(commands.Cog):
             return await inter.send(embed=i18n.no_fires_emb(locales, inter.author))
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": -bet}})
         boom = []
+        premium = await db.get_premium(self.bot, inter.author)
 
         def add():
             v = (random.randint(0, 2), random.randint(0, 2))
@@ -222,7 +225,8 @@ class EconomyCog(commands.Cog):
         embed = disnake.Embed(
             title=f"{locales.get('MINES').capitalize()} — {inter.author.display_name.capitalize()}",
             colour=0x2b2d31,
-            description=locales.get("MINES_EMB_DESCRIPTION")
+            description=locales.get("MINES_EMB_DESCRIPTION").replace("1.3", "1.5")
+            if premium else locales.get("MINES_EMB_DESCRIPTION")
         )
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         await inter.send(embed=embed, components=buttons)
@@ -243,7 +247,6 @@ class EconomyCog(commands.Cog):
             await inter.response.defer()
             s = inter.component.custom_id.split("_")
             boom = eval(s[3])  # [(line, row) x3]
-            pos = (int(s[1]), int(s[2]))  # line, row
             bet = s[4]
             buttons = []
             b = False
@@ -253,11 +256,11 @@ class EconomyCog(commands.Cog):
                 nonlocal b, checked
                 for line in range(3):
                     buttons.append([])
-                    for n, row in enumerate(inter.message.components[line].children, start=0):
+                    for num, row in enumerate(inter.message.components[line].children, start=0):
                         custom_id = f"mine_{line}_{n}_{boom}_{bet}"
                         emoji = "💣"
                         disabled = True if custom_id == inter.component.custom_id else False
-                        this_pos = (line, n)
+                        this_pos = (line, num)
                         if this_pos in boom and disabled:
                             emoji = "🔥"
                             b = True
@@ -294,6 +297,7 @@ class EconomyCog(commands.Cog):
             x = 0
             buttons = []
             bet = 0
+            premium = await db.get_premium(self.bot, inter.author)
             for i in range(3):
                 buttons.append([])
                 for n, btn in enumerate(inter.message.components[i].children, start=0):
@@ -303,7 +307,7 @@ class EconomyCog(commands.Cog):
                     if pos in boom:
                         btn.emoji = "🔥"
                     if btn.disabled:
-                        x += 1.3
+                        x += 1.5 if premium else 1.3
                     btn.disabled = True
                     buttons[i].append(disnake.ui.Button.from_component(btn))
             embed = inter.message.embeds[0]
