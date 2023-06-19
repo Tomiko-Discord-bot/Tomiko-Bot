@@ -29,7 +29,7 @@ class EconomyCog(commands.Cog):
             title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
             colour=0x2b2d31
         )
-        embed.description = user["icons"] + ("<:TomikoPro:1120020955863990282>" if await db.get_premium(
+        embed.description = user["icons"] + (" <:TomikoPro:1120020955863990282>" if await db.get_premium(
             self.bot, inter.author.id) else "")
         embed.set_thumbnail(url=inter.author.display_avatar.url)
         embed.set_image(url=user["banner"] if user["banner"] else None)
@@ -375,7 +375,7 @@ class EconomyCog(commands.Cog):
                 title=f"{locales.get('PROFILE').capitalize()} — {inter.author.display_name.capitalize()}",
                 colour=0x2b2d31
             )
-            embed.description = u["icons"] + ("<:TomikoPro:1120020955863990282>" if await db.get_premium(
+            embed.description = u["icons"] + (" <:TomikoPro:1120020955863990282>" if await db.get_premium(
                 self.bot, inter.author.id) else "")
             embed.set_thumbnail(url=inter.author.display_avatar.url)
             embed.set_image(url=u["banner"] if u["banner"] else None)

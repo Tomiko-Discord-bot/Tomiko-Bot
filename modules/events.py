@@ -56,8 +56,7 @@ class EventsCog(commands.Cog):
         my_guild = await self.bot.fetch_guild(params.MY_GUILD)
         my_channel = await my_guild.fetch_channel(params.NEW_GUILD_CHANNEL)
         embed = disnake.Embed(title=f"New guild - {guild.name}", colour=0x2b2d31)
-        embed.set_thumbnail(url=guild.icon.url if guild.icon else "https://cdn.discordapp.com/attachments/1101154274173"
-                                                                  "534230/1117503047539622008/maxresdefault.jpg")
+        embed.set_thumbnail(url=guild.icon.url if guild.icon else None)
         embed.description = f"Members: {guild.member_count}"
         invite = None
         for channel in guild.text_channels:
@@ -91,6 +90,14 @@ class EventsCog(commands.Cog):
         # Занесение участника в базу данных
         if not msg.author.bot:
             db.get_user(msg)
+
+    @commands.Cog.listener()
+    async def on_slash_command_error(
+            self,
+            inter: disnake.ApplicationCommandInteraction,
+            exception: disnake.InteractionException
+    ):
+        await inter.send(str(exception))
 
 
 def setup(bot):
