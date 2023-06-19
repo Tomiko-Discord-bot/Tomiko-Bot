@@ -83,9 +83,9 @@
    "BET_DESCR": "Bet with lights",
    "CASINO_NAME": "> Rate increase:",
    "CASINO_LOOSE": "You **didn't stop** and stock went down",
-   "CASINO_LOOSE_NAME": ">Lost:",
+   "CASINO_LOOSE_NAME": "> Lost:",
    "CASINO_COF": "> Coefficient:",
-   "CASINO_WIN": ">Win:",
+   "CASINO_WIN": "> Win:",
    "CASINO_WIN_DESCR": "You **succeeded** in withdrawing all your funds from the bank, **before the share** dropped.",
    "CASINO_PIC": "> Peak Ratio:",
 
