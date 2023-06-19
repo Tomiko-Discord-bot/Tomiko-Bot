@@ -16,8 +16,8 @@ class GeneralCog(commands.Cog):
     async def wipe(self, inter: disnake.ApplicationCommandInteraction):
         locales = i18n.Init(inter)
         await inter.send(locales.get("WIPE_1"))
-        db.users.delete_many({})
-        db.cooldown.delete_many({})
+        db.users.delete_many({"gid": inter.guild.id})
+        db.cooldown.delete_many({"gid": inter.guild.id})
         await inter.edit_original_message(locales.get("WIPE_2"))
 
     @commands.slash_command(
@@ -44,11 +44,11 @@ class GeneralCog(commands.Cog):
         )
         embed.add_field(
             name=locales.get("SETTINGS_MIN"),
-            value=f"```{g['reward_min']}```"
+            value=f"```{g['min']}```"
         )
         embed.add_field(
             name=locales.get("SETTINGS_MAX"),
-            value=f"```{g['reward_max']}```"
+            value=f"```{g['max']}```"
         )
         embed.add_field(
             name=locales.get("SETTINGS_REWARD_TIMEOUT"),
@@ -70,13 +70,13 @@ class GeneralCog(commands.Cog):
         select.add_option(
             label=locales.get("SETTINGS_MIN_BTN"),
             description=locales.get("SETTINGS_MIN_DESCR"),
-            value="reward_min",
+            value="min",
             emoji="<:arrow:1117858180249178245>"
         )
         select.add_option(
             label=locales.get("SETTINGS_MAX_BTN"),
             description=locales.get("SETTINGS_MAX_DESCR"),
-            value="reward_max",
+            value="max",
             emoji="<:arrow:1117858180249178245>"
         )
         select.add_option(
@@ -126,15 +126,15 @@ class GeneralCog(commands.Cog):
             values = {
                 "startbal": 0,
                 "cost": 1,
-                "reward_min": 2,
-                "reward_max": 3,
+                "min": 2,
+                "max": 3,
                 "timeout_reward": 4
             }
             if values[custom_id] == 2:
-                if g["reward_max"] < int(value):
+                if g["max"] < int(value):
                     return await inter.send(embed=i18n.error_emb(locales, inter.author))
             elif values[custom_id] == 3:
-                if g["reward_min"] > int(value):
+                if g["min"] > int(value):
                     return await inter.send(embed=i18n.error_emb(locales, inter.author))
             fields[values[custom_id]]["value"] = f"```{value}```"
             db.guilds.update_one({"gid": inter.guild.id}, {"$set": {custom_id: value}})

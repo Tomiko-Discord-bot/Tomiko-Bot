@@ -207,7 +207,7 @@ class EconomyCog(commands.Cog):
             return await inter.send(embed=i18n.no_fires_emb(locales, inter.author))
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": -bet}})
         boom = []
-        premium = await db.get_premium(self.bot, inter.author)
+        premium = await db.get_premium(self.bot, inter.author.id)
 
         def add():
             v = (random.randint(0, 2), random.randint(0, 2))
@@ -219,8 +219,9 @@ class EconomyCog(commands.Cog):
             add()
 
         buttons = [
-            [disnake.ui.Button(emoji="💣", custom_id=f"mine_{line}_{row}_{boom}_{bet}") for row in range(3)] for line in
-            range(3)
+            [disnake.ui.Button(emoji="<:mine:1120420325163815034>", custom_id=f"mine_{line}_{row}_{boom}_{bet}")
+             for row in range(3)]
+            for line in range(3)
         ]
         embed = disnake.Embed(
             title=f"{locales.get('MINES').capitalize()} — {inter.author.display_name.capitalize()}",
@@ -257,12 +258,14 @@ class EconomyCog(commands.Cog):
                 for line in range(3):
                     buttons.append([])
                     for num, row in enumerate(inter.message.components[line].children, start=0):
-                        custom_id = f"mine_{line}_{n}_{boom}_{bet}"
-                        emoji = "💣"
+                        custom_id = f"mine_{line}_{num}_{boom}_{bet}"
+                        emoji = "<:mine:1120420325163815034>"
                         disabled = True if custom_id == inter.component.custom_id else False
+                        if disabled:
+                            emoji = "🚩"
                         this_pos = (line, num)
                         if this_pos in boom and disabled:
-                            emoji = "🔥"
+                            emoji = "💣"
                             b = True
                             if not checked:
                                 checked = True
@@ -270,10 +273,10 @@ class EconomyCog(commands.Cog):
                                 return check()
                         if b:
                             if this_pos in boom:
-                                emoji = "🔥"
+                                emoji = "💣"
                             disabled = True
                         if row.disabled:
-                            emoji = "💣"
+                            emoji = "🚩"
                             disabled = True
                         buttons[line].append(disnake.ui.Button(
                             emoji=emoji,
@@ -297,7 +300,7 @@ class EconomyCog(commands.Cog):
             x = 0
             buttons = []
             bet = 0
-            premium = await db.get_premium(self.bot, inter.author)
+            premium = await db.get_premium(self.bot, inter.author.id)
             for i in range(3):
                 buttons.append([])
                 for n, btn in enumerate(inter.message.components[i].children, start=0):
@@ -305,7 +308,7 @@ class EconomyCog(commands.Cog):
                     boom = eval(btn.custom_id.split("_")[3])
                     bet = int(btn.custom_id.split("_")[4])
                     if pos in boom:
-                        btn.emoji = "🔥"
+                        btn.emoji = "💣"
                     if btn.disabled:
                         x += 1.5 if premium else 1.3
                     btn.disabled = True
