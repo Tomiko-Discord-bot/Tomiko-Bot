@@ -77,7 +77,10 @@ def get_timeout(user: disnake.Member, cmd: str) -> tuple[bool, int] | tuple[bool
 
 async def get_premium(bot: commands.InteractionBot, user: int):
     g = await bot.fetch_guild(1117477749771210754)
-    u = await g.fetch_member(user)
+    try:
+        u = await g.fetch_member(user)
+    except (Exception,):
+        return False
     r = disnake.utils.get(await g.fetch_roles(), id=1119300923899003033)
     if u:
         if r in u.roles:
