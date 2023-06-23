@@ -88,6 +88,7 @@
    "CASINO_WIN": "> Win:",
    "CASINO_WIN_DESCR": "You **succeeded** in withdrawing all your funds from the bank, **before the share** dropped.",
    "CASINO_PIC": "> Peak Ratio:",
+   "CASINO_COOLDOWN": "Finish the last game!",
 
    "PAY": "transfer",
    "PAY_DESCRIPTION": "Transfer your dollars to a person.",

@@ -26,7 +26,7 @@ class PremiumCog(commands.Cog):
         t = db.get_timeout(inter.author, "timely")
         if t[0]:
             g = db.get_guild(inter.guild)
-            reward = random.randint(g["min"]*3, g["max"]*4)
+            reward = random.randint(g["min"], g["max"]*3)
             embed = disnake.Embed(
                 title=f"{locales.get('REWARD').capitalize()} — {inter.author.display_name.capitalize()}",
                 colour=0x2b2d31

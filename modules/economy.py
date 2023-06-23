@@ -98,6 +98,7 @@ class EconomyCog(commands.Cog):
         name=disnake.Localized(key="CASINO"),
         description=disnake.Localized(key="CASINO_DESCRIPTION")
     )
+    @commands.cooldown(1, 999**9, commands.BucketType.member)
     async def casino(self, inter: disnake.ApplicationCommandInteraction, bet: int = commands.Param(
         name=disnake.Localized(key="BET"),
         description=disnake.Localized(key="BET_DESCR")
@@ -141,6 +142,7 @@ class EconomyCog(commands.Cog):
                         name=locales.get("CASINO_COF"),
                         value=f"```{i}```"
                     )
+                    self.bot.get_slash_command("casino").reset_cooldown(inter)
                     await inter.edit_original_message(embed=embed, components=[])
                     break
                 await inter.edit_original_message(embed=embed)
@@ -162,8 +164,16 @@ class EconomyCog(commands.Cog):
                     name=locales.get("CASINO_PIC"),
                     value=f"```{t}```"
                 )
+                self.bot.get_slash_command("casino").reset_cooldown(inter)
                 await inter.edit_original_message(components=[], embed=embed)
                 break
+
+    @commands.Cog.listener()
+    async def on_slash_command_error(self, inter, error):
+        o = getattr(error, "original", error)
+        locales = i18n.Init(inter)
+        if isinstance(o, commands.CommandOnCooldown):
+            await inter.send(ephemeral=True, content=locales.get("CASINO_COOLDOWN"))
 
     @commands.slash_command(
         name=disnake.Localized(key="PAY"),
