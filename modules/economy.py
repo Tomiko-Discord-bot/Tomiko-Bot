@@ -243,6 +243,21 @@ class EconomyCog(commands.Cog):
         await inter.send(embed=embed, components=buttons)
         self.messages[(await inter.original_message()).id] = inter.author.id
 
+    # @commands.slash_command(
+    #     name=disnake.Localized(key="LUCK"),
+    #     description=disnake.Localized(key="LUCK_DESCRIPTION")
+    # )
+    # @commands.cooldown(1, 999*9, commands.BucketType.member)
+    # async def luck(self, inter: disnake.ApplicationCommandInteraction, bet: int = commands.Param(
+    #     name=disnake.Localized(key="BET"),
+    #     description=disnake.Localized(key="BET_DESCR")
+    # )):
+    #     await inter.response.defer()
+    #     locales = i18n.Init(inter)
+    #     embed = disnake.Embed(
+    #         title=...
+    #     )
+
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
         try:

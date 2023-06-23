@@ -102,5 +102,8 @@
   "MINES_WIN": "Выигрыш",
 
   "TIMEOUT_TITLE": "Перерыв!",
-  "TIMEOUT_DESCRIPTION": "Используйте эту команду "
+  "TIMEOUT_DESCRIPTION": "Используйте эту команду ",
+
+  "LUCK": "удача",
+  "LUCK_DESCRIPTION": "Испытай удачу."
 }
