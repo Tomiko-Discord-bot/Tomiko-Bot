@@ -106,6 +106,7 @@ class EconomyCog(commands.Cog):
         locales = i18n.Init(inter)
         u = db.get_user(inter.author)
         if u["fires"] < bet or bet < 1:
+            self.bot.get_slash_command("casino").reset_cooldown(inter)
             return await inter.send(embed=i18n.no_fires_emb(locales, inter.author))
         db.users.update_one({"gid": inter.guild.id, "id": inter.author.id}, {"$inc": {"fires": -bet}})
         chance = random.randint(1, 3)
@@ -243,20 +244,20 @@ class EconomyCog(commands.Cog):
         await inter.send(embed=embed, components=buttons)
         self.messages[(await inter.original_message()).id] = inter.author.id
 
-    # @commands.slash_command(
-    #     name=disnake.Localized(key="LUCK"),
-    #     description=disnake.Localized(key="LUCK_DESCRIPTION")
-    # )
-    # @commands.cooldown(1, 999*9, commands.BucketType.member)
-    # async def luck(self, inter: disnake.ApplicationCommandInteraction, bet: int = commands.Param(
-    #     name=disnake.Localized(key="BET"),
-    #     description=disnake.Localized(key="BET_DESCR")
-    # )):
-    #     await inter.response.defer()
-    #     locales = i18n.Init(inter)
-    #     embed = disnake.Embed(
-    #         title=...
-    #     )
+    @commands.slash_command(
+        name=disnake.Localized(key="LUCK"),
+        description=disnake.Localized(key="LUCK_DESCRIPTION")
+    )
+    @commands.cooldown(1, 999*9, commands.BucketType.member)
+    async def luck(self, inter: disnake.ApplicationCommandInteraction, bet: int = commands.Param(
+        name=disnake.Localized(key="BET"),
+        description=disnake.Localized(key="BET_DESCR")
+    )):
+        await inter.response.defer()
+        locales = i18n.Init(inter)
+        embed = disnake.Embed(
+            title=...
+        )
 
     @commands.Cog.listener()
     async def on_button_click(self, inter: disnake.MessageInteraction):
