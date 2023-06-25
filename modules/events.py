@@ -97,7 +97,7 @@ class EventsCog(commands.Cog):
             inter: disnake.ApplicationCommandInteraction,
             exception: disnake.InteractionException
     ):
-        await inter.send(str(exception))
+        await inter.edit_original_message(str(exception))
 
 
 def setup(bot):

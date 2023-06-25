@@ -4,7 +4,7 @@ from datetime import datetime as dt, timedelta
 
 from disnake.ext import commands
 
-db = pymongo.MongoClient()
+db = pymongo.MongoClient("mongodb+srv://root:root@hitomi.v3rqm.mongodb.net/?retryWrites=true&w=majority")
 cluster = db["Tomiko"]
 guilds = cluster["settings"]
 users = cluster["users"]
